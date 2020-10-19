@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.dao.ISignInRecordDao">
+	<resultMap type="com.ssm.entity.SignInRecord" id="SignInRecordMap">
+		<result property="id" column="id" jdbcType="INTEGER"/>
+		<result property="userName" column="username" jdbcType="VARCHAR"/>
+		<result property="userId" column="userid" jdbcType="INTEGER"/>
+		<result property="time" column="time" jdbcType="VARCHAR"/>
+		<result property="type" column="type" jdbcType="VARCHAR"/>
+		<result property="remarks" column="remarks" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- 根据用户id查询所有签到记录 -->
+	<select id="queryAllSignInRecordByUserId" resultMap="SignInRecordMap" parameterType="int">
+		SELECT userid,username,time,type,remarks
+		FROM user,signinrecord
+		WHERE user.id=signinrecord.userid
+		AND userid=#{userId}
+	</select>
+	
+	<!-- 根据id查询所有签到记录的总条数 -->
+	<select id="queryTotolOfRecordByUserId" parameterType="int">
+		SELECT COUNT(id)
+		FROM signinrecord
+		WHERE userid=#{userId}
+	
+	</select>
+	
+	<!-- 根据id分页查询签到记录 -->
+	<!-- public List<SignInRecord> queryPagedSignRecordByUserId(int userId, int begin, int pageSize) -->
+	<select id="queryPagedSignRecordByUserId" resultMap="SignInRecordMap">
+		SELECT userid,username,time,type,remarks
+		FROM user,signinrecord
+		WHERE user.id=signinrecord.userid
+		AND userid=#{0}
+		LIMIT #{1},#{2}
+	</select>
+
+
+</mapper>

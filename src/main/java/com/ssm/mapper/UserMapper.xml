@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.dao.IUserDao">
+
+	<!--resultMap中，id用于标识，type是返回的类型，下面的result标签映射返回类中的每一个属性
+		属性名称要求：
+			column：数据表字段名（貌似无视大小写），property：实体类属性名（在数据库中尽量column名全小写 ）
+		-->
+	<resultMap id="BaseResultMap" type="com.ssm.entity.User">
+		<result column="id" property="id" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="emial" property="emial" jdbcType="VARCHAR"/>
+		<result column="createtime" property="createTime" jdbcType="VARCHAR"/>
+		<result column="lastLoginTime" property="lastLoginTime" jdbcType="TIMESTAMP"/>
+		<result column="department" property="department" jdbcType="VARCHAR"/>
+
+	</resultMap>
+
+
+	<!--用户登录 -->
+	<select id="login" parameterType="java.util.Map" resultType="com.ssm.entity.User">
+		SELECT
+		id,username,password,email,createtime,lastlogintime,department
+		FROM
+		user
+		WHERE
+		username=#{username,jdbcType=VARCHAR}
+		AND
+		password=#{password,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 记录登录时间 -->
+	<update id="setLoginTime" parameterType="int">
+		UPDATE user
+		SET lastlogintime = SYSDATE()
+		where id=#{id}
+	</update>
+	
+	<!-- 修改部门 -->
+	<!-- changeDpartment(int userid,String newDepartment) -->
+	<update id="changeDepartmentById">
+		UPDATE user
+		SET department = #{1}
+		WHERE id = #{0}
+	</update>
+	<!-- 查询所有用户的部分信息 -->
+	<select id="queryAllUser" resultMap="BaseResultMap">
+		SELECT id,username,department
+		FROM user
+	</select>
+
+</mapper>  
